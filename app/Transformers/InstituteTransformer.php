@@ -3,7 +3,7 @@
 namespace App\Transformers;
 
 use App\Models\Institute;
-//use App\Transformers\UserTransformer;
+use App\Transformers\UserTransformer;
 
 
 class InstituteTransformer extends \League\Fractal\TransformerAbstract
@@ -24,8 +24,8 @@ class InstituteTransformer extends \League\Fractal\TransformerAbstract
             'website' => $institute->website,
             'logo' => $institute->logo,
             'banner' => $institute->banner,
-            'created_at' =>  $user->created_at->toDateTimeString(),
-            'created_at_human' =>  $user->created_at->diffForHumans(),
+            'created_at' =>  $institute->created_at->toDateTimeString(),
+            'created_at_human' =>  $institute->created_at->diffForHumans(),
         ];
     }
 
