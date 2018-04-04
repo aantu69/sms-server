@@ -8,6 +8,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 //Route::post('/register', 'RegisterController@register')->middleware('auth:api');
 Route::post('/register', 'Api\RegisterController@register');
+Route::post('/users/{user}', 'Api\RegisterController@show');
 
 
 Route::group(['prefix' => 'institutes'], function(){

@@ -78,9 +78,11 @@ class InstituteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
+    public function show(Institute $institute){
+        return fractal()
+    		->item($institute)
+    		->transformWith(new InstituteTransformer)
+    		->toArray();
     }
 
     /**

@@ -61,9 +61,11 @@ class ShiftController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
+    public function show(Shift $shift){
+        return fractal()
+    		->item($shift)
+    		->transformWith(new ShiftTransformer)
+    		->toArray();
     }
 
     /**

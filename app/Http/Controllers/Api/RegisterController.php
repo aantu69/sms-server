@@ -19,6 +19,14 @@ class RegisterController extends Controller
         //$this->middleware('permission:'.$create, ['only' => ['create', 'store']]);
         //$this->middleware('permission:'.$edit, ['only' => ['edit', 'update']]);
     }
+
+    public function show(User $user){
+        return fractal()
+    		->item($user)
+    		->transformWith(new UserTransformer)
+    		->toArray();
+    }
+
     public function register(StoreUserRequest $request){
 
     	$user = new User;

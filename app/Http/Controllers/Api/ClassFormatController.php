@@ -63,9 +63,12 @@ class ClassFormatController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
+    public function show(ClassFormat $classFormat){
+        return fractal()
+            ->item($classFormat)
+            ->parseIncludes(['globalClasses'])
+    		->transformWith(new ClassFormatTransformer)
+    		->toArray();
     }
 
     /**
