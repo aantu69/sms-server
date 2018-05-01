@@ -5,15 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Orderable;
 
-class GlobalClass extends Model
+class ClassGlobal extends Model
 {
     use Orderable;
 
     protected $fillable = [
-        'name', 'class_format_id'
+        'name', 'format_global_id'
     ];
 
-    public function classFormat(){
-        return $this->belongsTo('App\Models\ClassFormat');
+    public function FormatGlobal(){
+        return $this->belongsTo('App\Models\FormatGlobal');
     }
 }

@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\ClassFormat;
-use App\Http\Requests\StoreClassFormatRequest;
-use App\Transformers\ClassFormatTransformer;
+use App\Models\ClassGlobal;
+use App\Http\Requests\StoreClassGlobalRequest;
+use App\Transformers\ClassGlobalTransformer;
 
-class ClassFormatController extends Controller
+class ClassGlobalController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,12 +17,12 @@ class ClassFormatController extends Controller
      */
     public function index()
     {
-        $classFormats = ClassFormat::latestFirst()->get();
+        $classesGlobal = ClassGlobal::latestFirst()->get();
 
         return fractal()
-            ->collection($classFormats)
-            ->parseIncludes(['globalClasses'])
-            ->transformWith(new ClassFormatTransformer)
+            ->collection($classesGlobal)
+            ->parseIncludes(['formatGlobal'])
+            ->transformWith(new ClassGlobalTransformer)
     		->toArray();
     }
 
@@ -33,7 +33,7 @@ class ClassFormatController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -42,19 +42,20 @@ class ClassFormatController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreClassFormatRequest $request)
+    public function store(StoreClassGlobalRequest $request)
     {
-        $classFormat = new ClassFormat;
+            
+        $classGlobal = new ClassGlobal;
 
-    	$classFormat->name = $request->name;
+        $classGlobal->name = $request->name;
+        $classGlobal->format_global_id = $request->format_global_id;
 
-    	$classFormat->save();
+        $classGlobal->save();
 
-    	return fractal()
-            ->item($classFormat)
-            ->parseIncludes(['globalClasses'])
-    		->transformWith(new ClassFormatTransformer)
-    		->toArray();
+        return fractal()
+            ->item($classGlobal)
+            ->transformWith(new ClassGlobalTransformer)
+            ->toArray();
     }
 
     /**
@@ -63,11 +64,10 @@ class ClassFormatController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(ClassFormat $classFormat){
+    public function show(ClassGlobal $classGlobal){
         return fractal()
-            ->item($classFormat)
-            ->parseIncludes(['globalClasses'])
-    		->transformWith(new ClassFormatTransformer)
+    		->item($classGlobal)
+    		->transformWith(new ClassGlobalTransformer)
     		->toArray();
     }
 

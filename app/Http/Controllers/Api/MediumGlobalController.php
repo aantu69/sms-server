@@ -4,14 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Institute;
-use App\Http\Requests\StoreInstituteRequest;
-use App\Transformers\InstituteTransformer;
+use App\Models\MediumGlobal;
+use App\Http\Requests\StoreMediumGlobalRequest;
+use App\Transformers\MediumGlobalTransformer;
 
 
-use League\Fractal\Pagination\IlluminatePaginatorAdapter;
-
-class InstituteController extends Controller
+class MediumGlobalController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,14 +18,11 @@ class InstituteController extends Controller
      */
     public function index()
     {
-        $institutes = Institute::latestFirst()->paginate(2);
-        $instCollection = $institutes->getCollection();
+        $mediums = MediumGlobal::latestFirst()->get();
 
         return fractal()
-            ->collection($instCollection)
-            ->parseIncludes(['users'])
-            ->transformWith(new InstituteTransformer)
-            ->paginateWith(new IlluminatePaginatorAdapter($institutes))
+            ->collection($mediums)
+            ->transformWith(new MediumGlobalTransformer)
     		->toArray();
     }
 
@@ -47,28 +42,18 @@ class InstituteController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreInstituteRequest $request)
+    public function store(StoreMediumGlobalRequest $request)
     {
-        
-        $institute = new Institute;
+        $medium = new MediumGlobal;
 
-    	$institute->name = $request->name;
-        $institute->short_name = $request->short_name;
-        $institute->address = $request->address;
-        $institute->email = $request->email;
-        $institute->phone = $request->phone;
-        $institute->fax = $request->fax;
-        $institute->mobile = $request->mobile;
-        $institute->website = $request->website;
-        $institute->logo = $request->logo;
-        $institute->banner = $request->banner;
+        $medium->name = $request->name;
+        //$medium->user_id = $request->user->id;
 
-    	$institute->save();
+    	$medium->save();
 
     	return fractal()
-            ->item($institute)
-            ->parseIncludes(['users'])
-    		->transformWith(new InstituteTransformer)
+            ->item($medium)
+    		->transformWith(new MediumGlobalTransformer)
     		->toArray();
     }
 
@@ -78,10 +63,11 @@ class InstituteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Institute $institute){
+    public function show($id){
+        $medium = MediumGlobal::where('id', $id)->first();
         return fractal()
-    		->item($institute)
-    		->transformWith(new InstituteTransformer)
+    		->item($medium)
+    		->transformWith(new MediumGlobalTransformer)
     		->toArray();
     }
 
@@ -105,7 +91,15 @@ class InstituteController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $medium = MediumGlobal::find($id);
+        $medium->name = $request->name;
+        //$medium->user_id = $request->user->id;
+        $medium->save();
+
+    	return fractal()
+            ->item($medium)
+    		->transformWith(new MediumGlobalTransformer)
+    		->toArray();
     }
 
     /**
@@ -116,6 +110,14 @@ class InstituteController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $medium = MediumGlobal::find($id);
+        $medium->delete();
+
+        $mediums = MediumGlobal::latestFirst()->get();
+
+        return fractal()
+            ->collection($mediums)
+            ->transformWith(new MediumGlobalTransformer)
+    		->toArray();
     }
 }

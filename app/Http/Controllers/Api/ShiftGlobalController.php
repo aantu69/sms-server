@@ -4,12 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Medium;
-use App\Http\Requests\StoreMediumRequest;
-use App\Transformers\MediumTransformer;
+use App\Models\ShiftGlobal;
+use App\Http\Requests\StoreShiftGlobalRequest;
+use App\Transformers\ShiftGlobalTransformer;
 
-
-class MediumController extends Controller
+class ShiftGlobalController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,11 +17,11 @@ class MediumController extends Controller
      */
     public function index()
     {
-        $mediums = Medium::latestFirst()->get();
+        $shiftGlobals = ShiftGlobal::latestFirst()->get();
 
         return fractal()
-            ->collection($mediums)
-            ->transformWith(new MediumTransformer)
+            ->collection($shiftGlobals)
+            ->transformWith(new ShiftGlobalTransformer)
     		->toArray();
     }
 
@@ -42,17 +41,17 @@ class MediumController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreMediumRequest $request)
+    public function store(StoreShiftGlobalRequest $request)
     {
-        $medium = new Medium;
+        $shiftGlobal = new ShiftGlobal;
 
-    	$medium->name = $request->name;
+    	$shiftGlobal->name = $request->name;
 
-    	$medium->save();
+    	$shiftGlobal->save();
 
     	return fractal()
-            ->item($medium)
-    		->transformWith(new MediumTransformer)
+            ->item($shiftGlobal)
+    		->transformWith(new ShiftGlobalTransformer)
     		->toArray();
     }
 
@@ -62,10 +61,11 @@ class MediumController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Medium $medium){
+    public function show($id){
+        $shiftGlobal = ShiftGlobal::where('id', $id)->first();
         return fractal()
-    		->item($medium)
-    		->transformWith(new MediumTransformer)
+    		->item($shiftGlobal)
+    		->transformWith(new ShiftGlobalTransformer)
     		->toArray();
     }
 
@@ -89,7 +89,14 @@ class MediumController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $shiftGlobal = ShiftGlobal::find($id);
+        $shiftGlobal->name = $request->name;
+        $shiftGlobal->save();
+
+    	return fractal()
+            ->item($shiftGlobal)
+    		->transformWith(new ShiftGlobalTransformer)
+    		->toArray();
     }
 
     /**

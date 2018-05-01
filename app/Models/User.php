@@ -33,4 +33,10 @@ class User extends Authenticatable
     public function institute(){
         return $this->belongsTo('App\Models\Institute');
     }
+
+    public static function boot()
+    {
+        parent::boot();
+        User::observe(new \App\Observers\UserActionsObserver);
+    }
 }

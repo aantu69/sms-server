@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\GlobalClass;
-use App\Http\Requests\StoreClassRequest;
-use App\Transformers\ClassTransformer;
+use App\Models\Section;
+use App\Http\Requests\StoreSectionRequest;
+use App\Transformers\SectionTransformer;
 
-class ClassController extends Controller
+class SectionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,11 +17,12 @@ class ClassController extends Controller
      */
     public function index()
     {
-        $globalClasses = GlobalClass::latestFirst()->get();
+        $sections = Section::latestFirst()->get();
 
         return fractal()
-            ->collection($globalClasses)
-            ->transformWith(new ClassTransformer)
+            ->collection($sections)
+            ->parseIncludes(['createdUser'])
+            ->transformWith(new SectionTransformer)
     		->toArray();
     }
 
@@ -41,19 +42,21 @@ class ClassController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreClassRequest $request)
+    public function store(StoreSectionRequest $request)
     {
             
-        $globalClass = new GlobalClass;
+        $section = new Section;
 
-        $globalClass->name = $request->name;
-        $globalClass->class_format_id = $request->class_format_id;
+        $section->name = $request->name;
+        $section->created_by = $request->user()->id;
+        $section->updated_by = $request->user()->id;
 
-        $globalClass->save();
+        $section->save();
 
         return fractal()
-            ->item($globalClass)
-            ->transformWith(new ClassTransformer)
+            ->item($section)
+            ->parseIncludes(['createdBy', 'updatedBy'])
+            ->transformWith(new SectionTransformer)
             ->toArray();
     }
 
@@ -63,10 +66,12 @@ class ClassController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(GlobalClass $globalClass){
+    public function show($id){
+        $section = Section::where('id', $id)->first();
         return fractal()
-    		->item($globalClass)
-    		->transformWith(new ClassTransformer)
+            ->item($section)
+            ->parseIncludes(['createdBy', 'updatedBy'])
+    		->transformWith(new SectionTransformer)
     		->toArray();
     }
 

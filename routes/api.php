@@ -16,22 +16,36 @@ Route::group(['prefix' => 'institutes'], function(){
     Route::post('/', 'Api\InstituteController@store');
 });
 
-Route::group(['prefix' => 'mediums'], function(){
-    Route::get('/', 'Api\MediumController@index');
-    Route::post('/', 'Api\MediumController@store');
+Route::group(['prefix' => 'mediums_global'], function(){
+    Route::get('/', 'Api\MediumGlobalController@index');
+    Route::get('/{id}', 'Api\MediumGlobalController@show');
+    Route::post('/', 'Api\MediumGlobalController@store');
+    Route::patch('/{id}', 'Api\MediumGlobalController@update');
+    Route::delete('/{id}', 'Api\MediumGlobalController@destroy')->middleware('auth:api');
 });
 
-Route::group(['prefix' => 'shifts'], function(){
-    Route::get('/', 'Api\ShiftController@index');
-    Route::post('/', 'Api\ShiftController@store');
+Route::group(['prefix' => 'shifts_global'], function(){
+    Route::get('/', 'Api\ShiftGlobalController@index');
+    Route::get('/{id}', 'Api\ShiftGlobalController@show');
+    Route::post('/', 'Api\ShiftGlobalController@store');
+    Route::patch('/{id}', 'Api\ShiftGlobalController@update');
+    Route::delete('/{id}', 'Api\ShiftGlobalController@destroy')->middleware('auth:api');
 });
 
-Route::group(['prefix' => 'class_formats'], function(){
-    Route::get('/', 'Api\ClassFormatController@index');
-    Route::post('/', 'Api\ClassFormatController@store');
+Route::group(['prefix' => 'sections'], function(){
+    Route::get('/', 'Api\SectionController@index');
+    Route::get('/{id}', 'Api\SectionController@show');
+    Route::post('/', 'Api\SectionController@store')->middleware('auth:api');
+    Route::patch('/{id}', 'Api\SectionController@update');
+    Route::delete('/{id}', 'Api\SectionController@destroy')->middleware('auth:api');
 });
 
-Route::group(['prefix' => 'classes'], function(){
-    Route::get('/', 'Api\ClassController@index');
-    Route::post('/', 'Api\ClassController@store');
+Route::group(['prefix' => 'formats_global'], function(){
+    Route::get('/', 'Api\FormatGlobalController@index');
+    Route::post('/', 'Api\FormatGlobalController@store');
+});
+
+Route::group(['prefix' => 'classes_global'], function(){
+    Route::get('/', 'Api\ClassGlobalController@index');
+    Route::post('/', 'Api\ClassGlobalController@store');
 });

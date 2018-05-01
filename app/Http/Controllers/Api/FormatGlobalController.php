@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Shift;
-use App\Http\Requests\StoreShiftRequest;
-use App\Transformers\ShiftTransformer;
+use App\Models\FormatGlobal;
+use App\Http\Requests\StoreFormatGlobalRequest;
+use App\Transformers\FormatGlobalTransformer;
 
-class ShiftController extends Controller
+class FormatGlobalController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,11 +17,12 @@ class ShiftController extends Controller
      */
     public function index()
     {
-        $shifts = Shift::latestFirst()->get();
+        $formatGlobal = FormatGlobal::latestFirst()->get();
 
         return fractal()
-            ->collection($shifts)
-            ->transformWith(new ShiftTransformer)
+            ->collection($formatGlobal)
+            ->parseIncludes(['classesGlobal'])
+            ->transformWith(new FormatGlobalTransformer)
     		->toArray();
     }
 
@@ -41,17 +42,18 @@ class ShiftController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreShiftRequest $request)
+    public function store(StoreFormatGlobalRequest $request)
     {
-        $shift = new Shift;
+        $formatGlobal = new FormatGlobal;
 
-    	$shift->name = $request->name;
+    	$formatGlobal->name = $request->name;
 
-    	$shift->save();
+    	$formatGlobal->save();
 
     	return fractal()
-            ->item($shift)
-    		->transformWith(new ShiftTransformer)
+            ->item($formatGlobal)
+            ->parseIncludes(['classesGlobal'])
+    		->transformWith(new FormatGlobalTransformer)
     		->toArray();
     }
 
@@ -61,10 +63,11 @@ class ShiftController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Shift $shift){
+    public function show(FormatGlobal $formatGlobal){
         return fractal()
-    		->item($shift)
-    		->transformWith(new ShiftTransformer)
+            ->item($formatGlobal)
+            ->parseIncludes(['classesGlobal'])
+    		->transformWith(new FormatGlobalTransformer)
     		->toArray();
     }
 
